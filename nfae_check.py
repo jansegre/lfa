@@ -59,6 +59,7 @@ def main():
     string = raw_input()
     for entry in yaml.load_all(args.lang_file):
         nfae = entry['nfae']
+        print
         print '%s:' % nfae['name']
         print 'OK!' if check(nfae, string) else 'FAIL!'
 
