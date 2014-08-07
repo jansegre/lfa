@@ -55,7 +55,8 @@ def main():
     parser.add_argument('-f', '--lang-file', required=True, help='file describing the language formatted in YAML', type=file)
     args = parser.parse_args()
 
-    string = sys.stdin.read()
+    #string = sys.stdin.read()
+    string = raw_input()
     for entry in yaml.load_all(args.lang_file):
         nfae = entry['nfae']
         print '%s:' % nfae['name']
