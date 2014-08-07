@@ -1,0 +1,41 @@
+---
+# exemplo {w in ∑: w ends with a, bb or ccc}
+#
+nfae:
+  name: maq1
+  states: [q1, q2, q3, q4, qf]
+  finals: [qf]
+  initial: q1
+  symbols: [a, b, c]
+  transitions:
+    q1:
+      a: [q1, qf]
+      b: [q1, q2]
+      c: [q1, q3]
+    q2:
+      b: [qf]
+    q3:
+      c: [q4]
+    q4:
+      c: [qf]
+---
+# exemplo {a**i b**j c**k a**m}
+#
+nfae:
+  name: maq2
+  states: [q1, q2, q3, qf]
+  finals: [qf]
+  initial: q1
+  symbols: [a, b, c]
+  transitions:
+    q1:
+      a: [q1]
+      null: [q2]
+    q2:
+      b: [q2]
+      null: [q3]
+    q3:
+      c: [q3]
+      null: [qf]
+    qf:
+      a: [qf]
