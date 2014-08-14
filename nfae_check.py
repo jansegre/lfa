@@ -28,6 +28,7 @@ def check(nfae, string, state=None, chain=''):
             print nchain
             return True
         else:
+            print nchain, 'reached end of input'
             return False
 
     symbol = string[0]
@@ -38,6 +39,7 @@ def check(nfae, string, state=None, chain=''):
         return check(nfae, nstring, state, chain)
 
     elif symbol not in nfae['symbols']:
+        print nchain, 'found symbol {} not in symbols {}'.format(symbol, nfae['symbols'])
         return False
 
     try:
@@ -50,18 +52,43 @@ def check(nfae, string, state=None, chain=''):
         return False
 
 
-def main():
-    parser = argparse.ArgumentParser(prog='nfae_check', add_help=True)
-    parser.add_argument('-f', '--lang-file', required=True, help='file describing the language formatted in YAML', type=file)
-    args = parser.parse_args()
+def pretty_check(langs):
+    try:
+        string = raw_input('> ')
+        if string == '':
+            return False
+    except EOFError:
+        print
+        return False
+    except KeyboardInterrupt:
+        print
+        return False
 
-    #string = sys.stdin.read()
-    string = raw_input()
-    for entry in yaml.load_all(args.lang_file):
-        nfae = entry['nfae']
+    for lang in langs:
+        nfae = lang['nfae']
         print
         print '%s:' % nfae['name']
         print 'OK!' if check(nfae, string) else 'FAIL!'
+        print
+
+    return True
+
+
+def main():
+    parser = argparse.ArgumentParser(prog='nfae_check', add_help=True)
+    parser.add_argument('--lang-file', '-f', required=True, help='file describing the language formatted in YAML', type=file)
+    parser.add_argument('--multiple', '-m', action='store_true')
+    args = parser.parse_args()
+    langs = list(yaml.load_all(args.lang_file))
+
+    #string = sys.stdin.read()
+    if args.multiple:
+        while True:
+            if not pretty_check(langs):
+                break
+    else:
+        pretty_check(langs)
+    print 'Bye!'
 
 
 if __name__ == '__main__':
