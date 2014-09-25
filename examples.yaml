@@ -1,5 +1,5 @@
 ---
-# exemplo {w in ∑: w ends with a, bb or ccc}
+# exemplo1 {w in ∑: w ends with a, bb or ccc}
 #
 nfae:
   name: maq1
@@ -19,7 +19,7 @@ nfae:
     q4:
       c: [qf]
 ---
-# exemplo {a**i b**j c**k a**m}
+# exemplo2 {a**i b**j c**k a**m}
 #
 nfae:
   name: maq2
