@@ -36,8 +36,9 @@ def check(nfae, string, state=None, chain='', visited=set()):
                 if nstate not in visited:
 
                     # remember to add the just visited state to the list
-                    if check(nfae, string, nstate, nnchain, visited | {nstate}):
-                        return True
+                    chain = check(nfae, string, nstate, nnchain, visited | {nstate})
+                    if chain:
+                        return chain
     except KeyError:
         pass
 
@@ -46,13 +47,11 @@ def check(nfae, string, state=None, chain='', visited=set()):
 
         # check if the current state is final
         if state in nfae['finals']:
-            print nchain
-            return True
+            return nchain
 
         # otherwise it's a known fail
         else:
-            #print nchain, 'reached end of input'
-            return False
+            return
 
     # if everything reached this point there is a symbol to be processed
     # and there isn't a ε-move available
@@ -66,24 +65,24 @@ def check(nfae, string, state=None, chain='', visited=set()):
 
     # and fail when there is an unkown symbol
     elif symbol not in nfae['symbols']:
-        print nchain, 'found symbol {} not in symbols {}'.format(symbol, nfae['symbols'])
-        return False
+        #print nchain, 'found symbol {} not in symbols {}'.format(symbol, nfae['symbols'])
+        return
 
     try:
         # otherwise test every state reachable from the current symbol
         for nstate in nfae['transitions'][state][symbol]:
-            if check(nfae, nstring, nstate, nchain):
-                return True
+            chain = check(nfae, nstring, nstate, nchain)
+            if chain:
+                return chain
 
-        # and if no match was found it's a dead end
-        return False
-
+    # and if no match was found it's a dead end
     except KeyError:
-        return False
+        pass
 
 
 def pretty_check(langs):
     try:
+        print
         string = raw_input('> ')
         if string == '':
             return False
@@ -96,9 +95,9 @@ def pretty_check(langs):
 
     for lang in langs:
         nfae = lang['nfae']
-        print
         print '%s:' % nfae['name']
-        print 'OK!' if check(nfae, string) else 'FAIL!'
+        chain = check(nfae, string)
+        print 'ACCEPTED: %s' % chain if chain else 'REJECTED!'
         print
 
     return True
@@ -110,6 +109,8 @@ def main():
     args = parser.parse_args()
     langs = list(yaml.load_all(args.lang_file[0]))
 
+    print 'nfae_check v%s -- (c) 2014 Jan Segre <jan@segre.in>' % VERSION
+    print 'Type the strings you want to check, you can do it multiple times:'
     while True:
         if not pretty_check(langs):
             break
