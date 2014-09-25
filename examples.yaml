@@ -19,7 +19,7 @@ nfae:
     q4:
       c: [qf]
 ---
-# exemplo2 {a**i b**j c**k a**m}
+# exemplo2 {a^i b^j c^k a^m}
 #
 nfae:
   name: maq2
