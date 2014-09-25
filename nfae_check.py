@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
+#
+# Copyright (C) 2014 Jan Segre <jan@segre.in>
+#
+# This software may be modified and distributed under the terms
+# of the MIT license.  See the LICENSE file for details.
+#
 import sys
 import argparse
 import yaml
 
+VERSION = '1.0.0'
 _ignore_symbols = ['\n']
 
 
