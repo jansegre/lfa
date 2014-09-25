@@ -76,18 +76,13 @@ def pretty_check(langs):
 
 def main():
     parser = argparse.ArgumentParser(prog='nfae_check', add_help=True)
-    parser.add_argument('--lang-file', '-f', required=True, help='file describing the language formatted in YAML', type=file)
-    parser.add_argument('--multiple', '-m', action='store_true')
+    parser.add_argument('lang_file', nargs=1, help='file describing the language formatted in YAML', type=file)
     args = parser.parse_args()
-    langs = list(yaml.load_all(args.lang_file))
+    langs = list(yaml.load_all(args.lang_file[0]))
 
-    #string = sys.stdin.read()
-    if args.multiple:
-        while True:
-            if not pretty_check(langs):
-                break
-    else:
-        pretty_check(langs)
+    while True:
+        if not pretty_check(langs):
+            break
     print 'Bye!'
 
 
