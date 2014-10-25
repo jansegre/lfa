@@ -1,0 +1,151 @@
+---
+# PDA for { 0^n.1^n | n ≥ 0 } (by final state)
+pda:
+  name: 0n1n
+
+  # Q
+  states: [p, q, r]
+
+  # ∑
+  input_alphabet: [0, 1]
+
+  # Γ
+  stack_alphabet: [A, Z]
+
+  # q₀
+  start_state: p
+
+  # Z₀
+  start_stack: Z
+
+  # F
+  accepting_states: [r]
+
+  # ẟ
+  transition_relation:
+    p:
+      0:
+        Z: [p, AZ]
+        A: [p, AA]
+      null:
+        Z: [q, Z]
+        A: [q, A]
+    q:
+      1:
+        A: [q, null]
+      null:
+        Z: [r, Z]
+---
+# PDA for { ww^R | w ∈ (0+1)* }
+pda:
+  name: wwr
+  states: [q0, q1, q2]
+  input_alphabet: [0, 1]
+  stack_alphabet: [0, 1, Z]
+  start_state: q0
+  start_stack: Z
+  accepting_states: [q2]
+  transition_relation:
+    q0:
+      0:
+        Z: [q0, '0Z']
+        0: [q0, '00']
+        1: [q0, '01']
+      1:
+        Z: [q0, 1Z]
+        0: [q0, 10]
+        1: [q0, 11]
+      null:
+        Z: [q1, Z]
+        0: [q1, 0]
+        1: [q1, 1]
+    q1:
+      0:
+        0: [q1, null]
+      1:
+        1: [q1, null]
+      null:
+        Z: [q2, Z]
+---
+# balanced paranthesis
+pda:
+  name: bal
+  states: [q0, q1, q2]
+  input_alphabet: [(, )]
+  stack_alphabet: [(, Z]
+  start_state: q0
+  start_stack: Z
+  accepting_states: [q2]
+  transition_relation:
+    q0:
+      (:
+        Z: [q0, (Z]
+        (: [q0, ((]
+      ):
+        (: [q1, null]
+      null:
+        Z: [q1, Z]
+    q1:
+      ):
+        (: [q1, null]
+      (:
+        (: [q0, ((]
+        Z: [q0, (Z]
+      null:
+        Z: [q2, Z]
+---
+# balanced paranthesis, another design
+pda:
+  name: bal2
+  states: [q0, q1]
+  input_alphabet: [(, )]
+  stack_alphabet: [(, Z]
+  start_state: q0
+  start_stack: Z
+  accepting_states: [q1]
+  transition_relation:
+    q0:
+      (:
+        Z: [q0, (Z]
+        (: [q0, ((]
+      ):
+        (: [q0, null]
+      null:
+        Z: [q1, Z]
+---
+# PDA for { xcx^R | x ∈ (a,b)* }
+pda:
+  name: xcxr
+  states: [q0, q1, q2, q3]
+  input_alphabet: [a, b, c]
+  stack_alphabet: [a, b, z]
+  start_state: q0
+  start_stack: z
+  accepting_states: [q3]
+  transition_relation:
+    q0:
+      a:
+        z: [q0, az]
+        a: [q0, aa]
+        b: [q0, ab]
+      b:
+        z: [q0, bz]
+        a: [q0, ba]
+        b: [q0, bb]
+      c:
+        z: [q1, z]
+        a: [q1, a]
+        b: [q1, b]
+    q1:
+      null:
+        z: [q2, z]
+        a: [q2, a]
+        b: [q2, b]
+    q2:
+      a:
+        a: [q2, null]
+      b:
+        b: [q2, null]
+      null:
+        z: [q3, z]
+        b: [q2, b]
