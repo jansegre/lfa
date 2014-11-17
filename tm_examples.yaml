@@ -1,1 +1,133 @@
-# TODO[jansegre]: populate with some Turing Machine examples
+---
+# This example can be found [here](http://en.wikipedia.org/wiki/Turing_machine)
+# The 7-tuple for the 3-state busy beaver looks like this
+name: busy
+dtm:
+  # Q is a finite, non-empty set of states
+  states: [A, B, C, HALT]
+
+  # Γ is a finite, non-empty set of tape alphabet symbols
+  tape_alphabet: [0, 1]
+
+  # b ∈ Γ is the blank symbol (the only symbol allowed to occur on the tape
+  # infinitely often at any step during the computation)
+  blank_symbol: 0
+
+  # ∑ ⊆ Γ ∖ {b} is the set of input symbols
+  input_alphabet: [1]
+
+  # q₀ ∈ Q is the initial state
+  start_state: A
+
+  # ◘ start marker [optional: null or supress to disable it]
+  start_marker: null
+
+  # F ⊆ Q is the set of final or accepting states.
+  final_states: [HALT]
+
+  # ẟ: (Q ∖ F) × Γ → Q × Γ × {L,R} is a partial function called the transition
+  # function, where L is left shift, R is right shift. (A relatively uncommon
+  # variant allows "no shift", say N, as a third element of the latter set.)
+  #
+  # shift notation is in respect to the head not the tape, R means the next cell
+  # read will be the one on the right
+  transition_function:
+    A:
+      0: [1, R, B]
+      1: [1, L, C]
+    B:
+      0: [1, L, A]
+      1: [1, R, B]
+    C:
+      0: [1, L, B]
+      1: [1, R, HALT]
+---
+# Exemplo dos slides
+# L = {a^n.b^n | n ≥ 0}
+name: anbn
+dtm:
+  states: [q0, q1, q2, q3, q4]
+  tape_alphabet: [a, b, A, B, β, ◘]
+  blank_symbol: β
+  start_marker: ◘
+  input_alphabet: [a, b]
+  start_state: q0
+  final_states: [q4]
+  transition_function:
+    q0:
+      ◘: [◘, D, q0]
+      a: [A, D, q1]
+      B: [B, D, q3]
+      β: [β, D, q4]
+    q1:
+      a: [a, D, q1]
+      B: [B, D, q1]
+      b: [B, E, q2]
+    q2:
+      a: [a, E, q2]
+      B: [B, E, q2]
+      A: [A, D, q0]
+    q3:
+      B: [B, D, q3]
+      β: [β, D, q4]
+---
+# From https://www.cl.cam.ac.uk/projects/raspberrypi/tutorials/turing-machine/four.html
+# This program reads the current binary number printed on the tape and increments it by 1 before stopping.
+name: counter
+dtm:
+  states: [S0, S1, S2, SS]
+  tape_alphabet: [0, 1, " "]
+  blank_symbol: " "
+  input_alphabet: [0, 1]
+  start_state: S0
+  final_states: [SS]
+  double_sided: true
+  transition_function:
+    S0:
+      " ": [" ", L, S1]
+      0: [0, R, S0]
+      1: [1, R, S0]
+    S1:
+      " ": [1, R, S2]
+      0: [1, L, S2]
+      1: [0, L, S1]
+    S2:
+      " ": [" ", R, SS]
+      0: [0, R, S2]
+      1: [1, R, S2]
+---
+# PDA for { 0^n.1^n | n ≥ 0 } (by final state)
+name: 0n1n
+pda:
+  # Q is a finite set of states
+  states: [p, q, r]
+
+  # ∑ is a finite set which is called the input alphabet
+  input_alphabet: [0, 1]
+
+  # Γ is a finite set which is called the stack alphabet
+  stack_alphabet: [A, Z]
+
+  # q₀ ∈ Q is the start state
+  start_state: p
+
+  # Z ∈ ∑ is the initial stack symbol
+  start_stack: Z
+
+  # F ⊆ Q is the set of accepting/final states
+  final_states: [r]
+
+  # ẟ is a finite subset of Q × (∑ ∪ {ε}) × Γ × Q × Γ*, the transition relation.
+  transition_relation:
+    p:
+      0:
+        Z: [p, AZ]
+        A: [p, AA]
+      null:
+        Z: [q, Z]
+        A: [q, A]
+    q:
+      1:
+        A: [q, null]
+      null:
+        Z: [r, Z]
